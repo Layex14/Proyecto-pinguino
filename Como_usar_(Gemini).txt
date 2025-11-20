@@ -1,5 +1,12 @@
+<<<<Leer todo antes de empezar>>>>
 
-          Hacer una  sola vez
+
+
+Instala Git para windows 	
+
+https://git-scm.com/install/windows
+
+Hacer una  sola vez
 
 Clonar el Proyecto (El Resto del Grupo)
 Todos los demás compañeros deben obtener una copia de trabajo:
@@ -28,7 +35,7 @@ Deben asegurarse de que tienen el trabajo más reciente que alguien más subió.
 
 Acción: Ve a la pestaña Control de Código Fuente (el icono de bifurcación) en VS Code y haz clic en el botón de Sincronizar Cambios (o el botón de Pull).
 
-Comando (Terminal): git pull origin master
+Comando (Terminal): git pull origin main
 
 Resultado: Descargas los cambios recientes de GitHub a tu copia local.
 
@@ -40,7 +47,7 @@ Cuando termines una sección de código funcional (ej: "terminé la clase del en
 
 Primero guardas el archivo (No se suele guardar automaticamente)
 
-UsaY en la terminal usa:
+Usa en la terminal usa:
 
 git add .
 
@@ -51,10 +58,6 @@ git commit -m "Mensaje claro de lo que hiciste"
 y Despues:
 
 git push
-
-
-
-aaaaa
 
 
 
