@@ -2,6 +2,10 @@ import pygame
 import sys
 from configuracion import screenancho, screenalto, FPS, titulo_juego, blanco
 from utilidades.boton import Boton
+
+
+
+
 class MenuPrincipal:
     def __init__(self, screen):
         self.screen= screen
@@ -18,6 +22,12 @@ class MenuPrincipal:
             print(f"error al cargar recursos: {e}")
             self.fondo=None
             sys.exit()
+
+        try:
+            pygame.mixer.music.load('recursos/musica/Main_menu.wav')
+            pygame.mixer.music.play(-1, fade_ms=5000)
+        except pygame.erros as e:
+            print("error en la musica: {e}")
 
         #Variables de Play
         recorte_jugar = (800, 150, 550, 300) 
@@ -52,6 +62,8 @@ class MenuPrincipal:
             self.screen.fill(blanco)
 
         if self.boton_jugar.draw(self.screen):
-            self.next_scene = "menu_principal" # Cámbialo a "juego" cuando tengas esa escena lista
+            pygame.mixer.music.fadeout(1000)
+            self.next_scene = "juego" 
         if self.boton_salir.draw(self.screen):
-            exit()
+            pygame.quit()
+            sys.exit()
