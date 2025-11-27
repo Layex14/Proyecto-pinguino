@@ -10,6 +10,9 @@ class Juego:
     def __init__(self, screen):
         self.screen=screen
         self.next_scene=None
+
+        self.ground_level = 420 
+        self.floor_color = (43, 25, 40)
         
         try:
             self.malla_jugador=pygame.image.load("recursos/imagenes/player_sprites.png").convert_alpha()
@@ -47,18 +50,28 @@ class Juego:
             if event.type == pygame.KEYDOWN:
                 if event.key==pygame.K_ESCAPE:
                     self.next_scene="menu_principal"
+                    
 
-                if event.key==pygame.K_x:
-                    self.player.player_attack(event)
-    
+                self.player.player_attack(event)  # Tecla X
+                self.player.player_jump(event)    # Tecla C
+                self.player.player_dashing(event) # Tecla Z
+
+
     def update(self):
         keys=pygame.key.get_pressed()
 
         self.player.Running_player(keys)
-
+        
         self.all_sprites.update()
 
     def draw(self):
-        self.screen.fill(blanco)
+        self.screen.fill((50, 50, 50)) # Fondo gris oscuro
 
+        # --- DIBUJAR SUELO ---
+        # Dibujamos el suelo desde el nivel 600 hacia abajo
+        pygame.draw.rect(self.screen, self.floor_color, [0, self.ground_level, screenancho, screenalto - self.ground_level])
+        # Línea de borde
+        pygame.draw.line(self.screen, (0,0,0), (0, self.ground_level), (screenancho, self.ground_level), 5)
+
+        # Dibujar Sprites
         self.all_sprites.draw(self.screen)
