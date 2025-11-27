@@ -2,9 +2,10 @@ import pygame
 import sys
 from configuracion import screenancho, screenalto, FPS, titulo_juego
 from escenas.menuprincipal import MenuPrincipal 
+from escenas.Juego import Juego
 
 
-class Juego:
+class JuegoManager:
     def __init__(self):
 
         pygame.init()
@@ -15,7 +16,8 @@ class Juego:
         self.clock = pygame.time.Clock()
 
         self.scenes={
-            "menu_principal": MenuPrincipal
+            "menu_principal": MenuPrincipal,
+            "juego": Juego
         }
 
         self.current_scene_name = "menu_principal"
@@ -55,5 +57,5 @@ class Juego:
         sys.exit()
 
 if __name__ == "__main__":
-    juego = Juego()
+    juego = JuegoManager()
     juego.run()
