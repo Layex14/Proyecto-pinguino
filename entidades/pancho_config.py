@@ -22,7 +22,7 @@ player_config = {
     "frame_height":80,
     "scale":3,
     "columns":8,
-    "cooldown": 110,
+    "cooldown": 40,
     "speed": 15,
     "start_x":300,
     "start_y": 400-25,

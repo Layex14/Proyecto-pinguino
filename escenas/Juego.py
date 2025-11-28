@@ -44,9 +44,9 @@ class Juego:
 
         self.pancho = BossPancho(
             x=1000, 
-            y=self.ground_level, # Posición inicial Y 
-            floor_y=self.ground_level, # Limite del suelo
-            player_target=self.player, # Objetivo de panchos
+            y=self.ground_level, 
+            floor_y=self.ground_level, 
+            player_target=self.player, 
             spritesheet=self.malla_pancho,
             visual_config=pancho_config,
             animation_data=pancho_definitions
@@ -85,6 +85,5 @@ class Juego:
         pygame.draw.rect(self.screen, (255, 0, 0), self.player.rect, 2)
         
         pygame.draw.rect(self.screen, (255, 0, 0), self.pancho.rect, 2)
-        # IMPORTANTE: Dibujamos el proyectil del jefe manualmente
-        # (ya que el proyectil no está en all_sprites, lo maneja el jefe)
+
         self.pancho.draw_projectile(self.screen)
