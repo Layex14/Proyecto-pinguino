@@ -20,6 +20,9 @@ class Juego:
         try:
             self.malla_jugador=pygame.image.load("recursos/imagenes/player_sprites.png").convert_alpha()
             self.malla_pancho=pygame.image.load("recursos/imagenes/pancho_sprites.png").convert_alpha()
+            pygame.mixer.music.load('recursos/musica/Musicaboss.mp3')
+            pygame.mixer.music.play(-1, fade_ms=2000)
+            pygame.mixer.music.set_volume(0.4)
         except pygame.error as e:
             print("error de sprite: {e}")
             sys.exit()
@@ -40,9 +43,9 @@ class Juego:
 
         self.pancho = BossPancho(
             x=1000, 
-            y=self.ground_level, # Posición inicial Y (se ajustará con floor_y)
-            floor_y=self.ground_level, # Límite del suelo
-            player_target=self.player, # Objetivo
+            y=self.ground_level, # Posición inicial Y 
+            floor_y=self.ground_level, # Limite del suelo
+            player_target=self.player, # Objetivo de panchos
             spritesheet=self.malla_pancho,
             visual_config=pancho_config,
             animation_data=pancho_definitions

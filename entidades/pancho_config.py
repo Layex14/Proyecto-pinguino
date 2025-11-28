@@ -9,7 +9,7 @@ pancho_config = {
     "speed": 5,
     "start_x":100,
     "start_y": 210-100,
-    "crop_bounds": (15, 0, 40, 0)
+    "crop_bounds": (15, 0, 40, 15)
 }
 
 pancho_definitions = {
