@@ -36,7 +36,8 @@ class Juego:
             spritesheet=self.malla_jugador,
             visual_config=player_config,
             animation_data=player_definitions,
-            default_animation="idle"
+            default_animation="idle",
+            floor_y=self.ground_level
         )
         self.all_sprites.add(self.player)
 
@@ -80,7 +81,10 @@ class Juego:
         pygame.draw.line(self.screen, (0,0,0), (0, self.ground_level), (screenancho, self.ground_level), 5)
 
         self.all_sprites.draw(self.screen)
+
+        pygame.draw.rect(self.screen, (255, 0, 0), self.player.rect, 2)
         
+        pygame.draw.rect(self.screen, (255, 0, 0), self.pancho.rect, 2)
         # IMPORTANTE: Dibujamos el proyectil del jefe manualmente
         # (ya que el proyectil no está en all_sprites, lo maneja el jefe)
         self.pancho.draw_projectile(self.screen)
