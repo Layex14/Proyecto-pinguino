@@ -3,7 +3,7 @@ import pygame
 # Heredar de pygame.sprite.Sprite es la mejor práctica
 class Entity(pygame.sprite.Sprite): 
     # El constructor ahora acepta un diccionario (visual_config)
-    def __init__(self, name, spritesheet, visual_config, animation_data, default_animation):
+    def __init__(self, name, spritesheet, visual_config, animation_data, default_animation,):
         # Inicializa la clase Sprite de Pygame
         super().__init__() 
         
@@ -141,9 +141,13 @@ class Entity(pygame.sprite.Sprite):
             self.previous_state = self.state
     
 class Player(Entity):
-    def __init__(self, name, spritesheet, visual_config, animation_data, default_animation):
+    def __init__(self, name, spritesheet, visual_config, animation_data, default_animation, floor_y):
         super().__init__(name, spritesheet, visual_config, animation_data, default_animation)
         
+
+        self.floor_y = floor_y
+
+    
         # Variables de Salto
         self.on_ground = True      
         self.jump_speed = -20      
@@ -174,9 +178,8 @@ class Player(Entity):
         self.rect.y += self.vertical_momentum
         
         # 4. Simulación del Suelo (Reemplazar con colisión real)
-        GROUND_Y = 600
-        if self.rect.bottom >= GROUND_Y:
-            self.rect.bottom = GROUND_Y
+        if self.rect.bottom >= self.floor_y:
+            self.rect.bottom = self.floor_y
             self.on_ground = True
             self.jumping = False
             self.vertical_momentum = 0
