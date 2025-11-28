@@ -2,7 +2,10 @@ import pygame
 import sys 
 from configuracion import screenancho, screenalto, blanco
 #entidades
-from entidades.Entity import Player, Entity
+from entidades.Entity import Player , Entity
+
+from entidades.boss import BossPancho
+
 #diccionario
 from entidades.pancho_config import player_config, player_definitions, pancho_config, pancho_definitions
 
@@ -32,17 +35,20 @@ class Juego:
             animation_data=player_definitions,
             default_animation="idle"
         )
-
         self.all_sprites.add(self.player)
-        self.pancho=Entity(
-            name="pancho",
+
+
+        self.pancho = BossPancho(
+            x=1000, 
+            y=self.ground_level, # Posición inicial Y (se ajustará con floor_y)
+            floor_y=self.ground_level, # Límite del suelo
+            player_target=self.player, # Objetivo
             spritesheet=self.malla_pancho,
             visual_config=pancho_config,
-            animation_data=pancho_definitions,
-            default_animation="idle"
+            animation_data=pancho_definitions
         )
-
         self.all_sprites.add(self.pancho)
+
         self.enemies.add(self.pancho)
 
     def handle_events(self, events):
@@ -65,13 +71,13 @@ class Juego:
         self.all_sprites.update()
 
     def draw(self):
-        self.screen.fill((50, 50, 50)) # Fondo gris oscuro
-
-        # --- DIBUJAR SUELO ---
-        # Dibujamos el suelo desde el nivel 600 hacia abajo
+        self.screen.fill((50, 50, 50))
+        
         pygame.draw.rect(self.screen, self.floor_color, [0, self.ground_level, screenancho, screenalto - self.ground_level])
-        # Línea de borde
         pygame.draw.line(self.screen, (0,0,0), (0, self.ground_level), (screenancho, self.ground_level), 5)
 
-        # Dibujar Sprites
         self.all_sprites.draw(self.screen)
+        
+        # IMPORTANTE: Dibujamos el proyectil del jefe manualmente
+        # (ya que el proyectil no está en all_sprites, lo maneja el jefe)
+        self.pancho.draw_projectile(self.screen)
