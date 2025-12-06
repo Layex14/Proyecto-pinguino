@@ -24,7 +24,15 @@ class Entity(pygame.sprite.Sprite):
         self.columns = visual_config["columns"]
         self.cooldown = visual_config["cooldown"]
         self.speed = visual_config["speed"]
-        
+
+        self.max_hp = visual_config.get("hp",100)
+        self.hp = self.max_hp
+
+        self.last_hit_time = 0
+        self.invulnerable_duration = 100 # ms (1 segundo de invencibilidad)
+        self.is_dead = False
+
+
         if "crop_bounds" in visual_config:
             self.crop_bounds = visual_config["crop_bounds"]
         else:
@@ -47,8 +55,34 @@ class Entity(pygame.sprite.Sprite):
         #posicion inicial
         self.rect.x = visual_config["start_x"]
         self.rect.y = visual_config["start_y"]
+    
 
-            #extraccion de imagen
+    def attack_hitbox(self):
+        if not self.is_attacking:
+            return None
+        hitbox = pygame.Rect(-50, -50, 60, 60)
+        if self.direction == "right":
+            hitbox.midleft = self.rect.midright
+        else:
+            hitbox.midright = self.rect.midleft
+            
+        hitbox.centery = self.rect.centery
+        return hitbox
+
+    def damage(self, amount):
+        current_time = pygame.time.get_ticks()
+        
+        # Si pasó el tiempo de invencibilidad, recibe daño
+        if current_time - self.last_hit_time > self.invulnerable_duration:
+            self.hp -= amount
+            self.last_hit_time = current_time            
+            if self.hp <= 0:
+                self.hp = 0
+                self.is_dead = True
+                # Aquí podrías cambiar state a 'dead' si tienes la animación
+            return True # Confirmamos que recibió daño
+        return False
+        #extraccion de imagen
     def get_image(self, index):
         row = index // self.columns
         col = index % self.columns

@@ -9,7 +9,8 @@ pancho_config = {
     "speed": 5,
     "start_x":100,
     "start_y": 210,
-    "crop_bounds": (15, 0, 40, 15)
+    "crop_bounds": (15, 0, 40, 15),
+    "hp":100
 }
 
 pancho_definitions = {
@@ -22,7 +23,7 @@ player_config = {
     "frame_height":80,
     "scale":4.5,
     "columns":8,
-    "cooldown": 100,
+    "cooldown": 40,
     "speed": 15,
     "start_x":300,
     "start_y": 127*8,

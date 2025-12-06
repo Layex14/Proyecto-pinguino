@@ -88,6 +88,33 @@ class Juego:
         self.all_sprites.update()
 
         self.camera.update()
+
+        if self.player.is_attacking:
+            attack_box = self.player.attack_hitbox()
+            if attack_box and attack_box.colliderect(self.pancho.rect):
+                self.pancho.damage(5)
+        if self.pancho.state == 'attack_1': # O la animación que use para atacar
+            # Pancho podría tener su propio get_attack_hitbox o usar el genérico
+            boss_hitbox = self.pancho.attack_hitbox()
+            if boss_hitbox and boss_hitbox.colliderect(self.player.rect):
+                self.player.damage(20)
+        if self.pancho.projectile and not self.pancho.projectile.landed:
+            if self.pancho.projectile.rect.colliderect(self.player.rect):
+                if self.player.damage(15):
+                    self.pancho.projectile = None # El proyectil desaparece al 
+                    
+    def draw_health_bar(self, entity, x, y, width, height, color):
+        """Función auxiliar para dibujar barras de vida."""
+        # Fondo (gris)
+        pygame.draw.rect(self.screen, (60, 60, 60), (x, y, width, height))
+        
+        # Vida actual (color)
+        ratio = entity.hp / entity.max_hp
+        pygame.draw.rect(self.screen, color, (x, y, width * ratio, height))
+        
+        # Borde (blanco)
+        pygame.draw.rect(self.screen, (255, 255, 255), (x, y, width, height), 2)
+
     def draw(self):
 
         offset = self.camera.offset_x
@@ -97,14 +124,26 @@ class Juego:
         else:
             self.screen.fill(blanco)
 
-        for sprites in self.all_sprites:
-            draw_rect = sprites.rect.move(-offset,9)
-            self.screen.blit(sprites.image, draw_rect)
+        for sprite in self.all_sprites: 
+            draw_rect = sprite.rect.move(-offset, 9)
+            self.screen.blit(sprite.image, draw_rect)
+            
+    #       (Opcional) DEBUG: Descomenta esto para ver los rectángulos rojos de ataque
+            if hasattr(sprite, 'is_attacking') and sprite.is_attacking:
+                hitbox = sprite.attack_hitbox()
+                if hitbox:
+                    hitbox_moved = hitbox.move(-offset, 0)
+                    pygame.draw.rect(self.screen, (255, 0, 0), hitbox_moved, 2)
+
+        debug_player_rect = self.player.rect.move(-offset, 0)
+        pygame.draw.rect(self.screen, (255, 0, 0), debug_player_rect, 2)
         
-        #debug_player_rect = self.player.rect.move(-offset, 0)
-        #pygame.draw.rect(self.screen, (255, 0, 0), debug_player_rect, 2)
-        
-        #debug_pancho_rect = self.pancho.rect.move(-offset, 0)
-        #pygame.draw.rect(self.screen, (255, 0, 0), debug_pancho_rect, 2)
+        debug_pancho_rect = self.pancho.rect.move(-offset, 0)
+        pygame.draw.rect(self.screen, (255, 0, 0), debug_pancho_rect, 2)
 
         self.pancho.draw_projectile(self.screen, offset)
+
+        self.draw_health_bar(self.player, 20, 20, 200, 20, (0, 255, 0))
+
+        if not self.pancho.is_dead:
+             self.draw_health_bar(self.pancho, screenancho // 2 - 250, 650, 500, 25, (255, 0, 0))
