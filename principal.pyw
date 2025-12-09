@@ -9,16 +9,16 @@ class JuegoManager:
     def __init__(self):
 
         pygame.init()
-
+        #creador de la pantalla
         self.screen = pygame.display.set_mode((screenancho, screenalto))
         pygame.display.set_caption(titulo_juego)
 
         self.clock = pygame.time.Clock()
 
-        #Gestor de escenario
+        #Gestor de escenario    
         self.scenes={
             "menu_principal": MenuPrincipal,
-            "juego": Juego
+                "juego": Juego
         }
 
 

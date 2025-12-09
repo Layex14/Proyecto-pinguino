@@ -31,7 +31,7 @@ class Entity(pygame.sprite.Sprite):
         self.hp = self.max_hp
 
         self.last_hit_time = 0
-        self.invulnerable_duration = 100 # ms (1 segundo de invencibilidad)
+        self.invulnerable_duration = 1000 
         self.is_dead = False
 
 
@@ -61,10 +61,10 @@ class Entity(pygame.sprite.Sprite):
 
     def attack_hitbox(self):
 
-
+        ### Detecta ataques de PJ o panchito
         if not self.is_attacking:
             return None
-        hitbox = pygame.Rect(0, 0, -40, 100)
+        hitbox = pygame.Rect(0, 0, 60, 100)
         if self.direction == "right":
             hitbox.midleft = self.rect.midright
         else:
@@ -74,20 +74,26 @@ class Entity(pygame.sprite.Sprite):
         return hitbox
 
     def damage(self, amount):
+
+        #### Generador de daño
+
         current_time = pygame.time.get_ticks()
         
-        # Si pasó el tiempo de invencibilidad, recibe daño
         if current_time - self.last_hit_time > self.invulnerable_duration:
             self.hp -= amount
             self.last_hit_time = current_time            
             if self.hp <= 0:
                 self.hp = 0
                 self.is_dead = True
-                # Aquí podrías cambiar state a 'dead' si tienes la animación
-            return True # Confirmamos que recibió daño
+            return True
         return False
-        #extraccion de imagen
+    
+
     def get_image(self, index):
+
+        ### extraccion de imagen
+
+
         row = index // self.columns
         col = index % self.columns
         
@@ -117,7 +123,7 @@ class Entity(pygame.sprite.Sprite):
             scaled_frame = pygame.transform.scale(full_frame, (scaled_width, scaled_height))
             return scaled_frame
 
-    # Actualiza la nimacion
+    # Actualiza la animacion
     def update(self):
         current_time = pygame.time.get_ticks()
         self.check_state_change() 
@@ -134,6 +140,7 @@ class Entity(pygame.sprite.Sprite):
             self.image = self.get_image(spritesheet_index)
             self.compensate() 
     
+    ##voltea la imagen
     def compensate(self):
         current_midbottom = self.rect.midbottom
         
@@ -143,6 +150,8 @@ class Entity(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.midbottom = current_midbottom
         
+
+    ## Detector de cambios de estado
     def check_state_change(self):
         if self.state != self.previous_state:
             
@@ -276,7 +285,7 @@ class Player(Entity):
         if self.is_attacking or self.dashing:
             return
         
-        
+        # salto
         if self.on_ground and event.type == pygame.KEYDOWN and event.key == pygame.K_x:
             self.on_ground = False
             self.jumping = True
@@ -289,7 +298,7 @@ class Player(Entity):
         if self.is_attacking or self.dashing:
             return
             
-        
+        #dasheo
         if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
             current_time = pygame.time.get_ticks()
             
@@ -297,7 +306,7 @@ class Player(Entity):
             self.state = 'dash'
             self.dash_timer = current_time + self.dash_duration_ms
             
-
+    #Cerebro de Entity
     def update(self):
         current_time = pygame.time.get_ticks()
 

@@ -20,6 +20,8 @@ class Juego:
         self.ground_level = 127*4 
         self.floor_color = (43, 25, 40)
         
+        # carga de recursos
+
         try:
             self.escenario = pygame.image.load('recursos/imagenes/escenario.png').convert_alpha()
             
@@ -68,6 +70,8 @@ class Juego:
             ancho_escenario=self.ancho_escenario
         )
 
+    #Procesa eventos
+
     def handle_events(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -79,7 +83,7 @@ class Juego:
                 self.player.player_jump(event)    # Tecla X
                 self.player.player_dashing(event) # Tecla C
 
-
+    #Cerebro de Juego
     def update(self):
         keys=pygame.key.get_pressed()
 
@@ -93,28 +97,29 @@ class Juego:
             attack_box = self.player.attack_hitbox()
             if attack_box and attack_box.colliderect(self.pancho.rect):
                 self.pancho.damage(5)
-        if self.pancho.state == 'attack_1': # O la animación que use para atacar
-            # Pancho podría tener su propio get_attack_hitbox o usar el genérico
+        if self.pancho.state == 'attack_1': 
             boss_hitbox = self.pancho.attack_hitbox()
             if boss_hitbox and boss_hitbox.colliderect(self.player.rect):
                 self.player.damage(20)
         if self.pancho.projectile and not self.pancho.projectile.landed:
             if self.pancho.projectile.rect.colliderect(self.player.rect):
                 if self.player.damage(15):
-                    self.pancho.projectile = None # El proyectil desaparece al 
-                    
+                    self.pancho.projectile = None  
+
+    #Barras de vida         
     def draw_health_bar(self, entity, x, y, width, height, color):
         """Función auxiliar para dibujar barras de vida."""
-        # Fondo (gris)
+        
         pygame.draw.rect(self.screen, (60, 60, 60), (x, y, width, height))
         
-        # Vida actual (color)
+        
         ratio = entity.hp / entity.max_hp
         pygame.draw.rect(self.screen, color, (x, y, width * ratio, height))
         
-        # Borde (blanco)
         pygame.draw.rect(self.screen, (255, 255, 255), (x, y, width, height), 2)
 
+
+    #Dibujos de hitbox u otro
     def draw(self):
 
         offset = self.camera.offset_x
@@ -128,19 +133,22 @@ class Juego:
             draw_rect = sprite.rect.move(-offset, 9)
             self.screen.blit(sprite.image, draw_rect)
             
-    #       (Opcional) DEBUG: Descomenta esto para ver los rectángulos rojos de ataque
-            if hasattr(sprite, 'is_attacking') and sprite.is_attacking:
-                hitbox = sprite.attack_hitbox()
-                if hitbox:
-                    hitbox_moved = hitbox.move(-offset, 0)
-                    pygame.draw.rect(self.screen, (255, 0, 0), hitbox_moved, 2)
+            #Hitbox ataque
+            # if hasattr(sprite, 'is_attacking') and sprite.is_attacking:
+            #     hitbox = sprite.attack_hitbox()
+            #     if hitbox:
+            #         hitbox_moved = hitbox.move(-offset, 0)
+            #         pygame.draw.rect(self.screen, (255, 0, 0), hitbox_moved, 2)
 
-        debug_player_rect = self.player.rect.move(-offset, 0)
-        pygame.draw.rect(self.screen, (255, 0, 0), debug_player_rect, 2)
+
+        #Hitbox de personajes
+        # debug_player_rect = self.player.rect.move(-offset, 0)
+        # pygame.draw.rect(self.screen, (255, 0, 0), debug_player_rect, 2)
         
-        debug_pancho_rect = self.pancho.rect.move(-offset, 0)
-        pygame.draw.rect(self.screen, (255, 0, 0), debug_pancho_rect, 2)
+        # debug_pancho_rect = self.pancho.rect.move(-offset, 0)
+        # pygame.draw.rect(self.screen, (255, 0, 0), debug_pancho_rect, 2)
 
+        #Proyectil de pancho
         self.pancho.draw_projectile(self.screen, offset)
 
         self.draw_health_bar(self.player, 20, 20, 200, 20, (0, 255, 0))
