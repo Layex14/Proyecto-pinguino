@@ -15,16 +15,18 @@ class JuegoManager:
 
         self.clock = pygame.time.Clock()
 
+        #Gestor de escenario
         self.scenes={
             "menu_principal": MenuPrincipal,
             "juego": Juego
         }
 
+
         self.current_scene_name = "menu_principal"
         self.current_scene = self.scenes[self.current_scene_name](self.screen)
 
 
-
+    #Crea el bucle del programa
     def run(self):
         running = True
         while running:
