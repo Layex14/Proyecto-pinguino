@@ -1,11 +1,13 @@
 import pygame
 
 class Entity(pygame.sprite.Sprite): 
-    # acepta un diccionario (visual_config)
     def __init__(self, name, spritesheet, visual_config, animation_data, default_animation,):
         
         super().__init__() 
         
+        ### obtenemos valores de pancho_config
+        
+
         self.name = name
         self.spritesheet = spritesheet
         self.animation_data = animation_data
@@ -38,7 +40,7 @@ class Entity(pygame.sprite.Sprite):
         else:
             self.crop_bounds = None
         
-        # Control de animacion
+        # Controla de animacion
         self.last_update = pygame.time.get_ticks() 
 
         self.start_frame_index, self.animation_duration = self.animation_data[self.state]
@@ -58,9 +60,11 @@ class Entity(pygame.sprite.Sprite):
     
 
     def attack_hitbox(self):
+
+
         if not self.is_attacking:
             return None
-        hitbox = pygame.Rect(-50, -50, 60, 60)
+        hitbox = pygame.Rect(0, 0, -40, 100)
         if self.direction == "right":
             hitbox.midleft = self.rect.midright
         else:
