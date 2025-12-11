@@ -67,7 +67,7 @@ class BossPancho(Entity):
         if self.current_frame_in_animation < 10 or self.current_frame_in_animation > 15:
             return None
 
-        hitbox = pygame.Rect(0, 0, 150, 150)
+        hitbox = pygame.Rect(0, 0, 250, 150)
         
         if self.direction == "right":
             hitbox.midleft = self.rect.midright

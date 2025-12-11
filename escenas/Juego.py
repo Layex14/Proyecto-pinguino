@@ -178,9 +178,9 @@ class Juego:
 
                         # Empuja
                         if self.pancho.rect.centerx < self.player.rect.centerx:
-                            self.player.rect.x += 200 #der
+                            self.player.rect.x += 900 #der
                         else:
-                            self.player.rect.x -= 200 #isq
+                            self.player.rect.x -= 900 #isq
 
         
         if self.pancho.projectile and not self.pancho.projectile.landed:
