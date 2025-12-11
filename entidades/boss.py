@@ -63,6 +63,9 @@ class BossPancho(Entity):
         
         if self.state != 'attack': 
             return None
+        
+        if self.current_frame_in_animation < 10 or self.current_frame_in_animation > 15:
+            return None
 
         hitbox = pygame.Rect(0, 0, 150, 150)
         

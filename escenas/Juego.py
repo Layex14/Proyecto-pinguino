@@ -26,6 +26,31 @@ class Juego:
         self.ground_level = 127*4 
         self.floor_color = (43, 25, 40)
         
+        self.showing_intro = True
+        self.intro_stage = "fade_in" # Estados: fade_in, hold, fade_out
+        self.intro_alpha = 0         # Transparencia (0 invisible, 255 visible)
+        self.intro_timer = pygame.time.get_ticks()
+        
+        
+        self.DURATION_FADE_IN = 1000
+        self.DURATION_HOLD = 1000    # Tiempo que el texto se queda quieto
+        self.DURATION_FADE_OUT = 1000
+        
+        
+        try:
+            self.font_boss_big = pygame.font.SysFont("georgia", 100, bold=True)
+            self.font_boss_sub = pygame.font.SysFont("georgia", 40, italic=True)
+        except:
+            self.font_boss_big = pygame.font.SysFont(None, 100)
+            self.font_boss_sub = pygame.font.SysFont(None, 40)
+            
+        # Renderizamos los textos una sola vez para optimizar
+        self.text_name = self.font_boss_big.render("PANCHITO", True, (255, 255, 255))
+        self.text_sub = self.font_boss_sub.render("EL ANTILOPE SABLE", True, (200, 200, 200))
+        
+        # Centramos los textos en la pantalla
+        self.rect_name = self.text_name.get_rect(center=(screenancho//2, screenalto//2 - 50))
+        self.rect_sub = self.text_sub.get_rect(center=(screenancho//2, screenalto//2 + 20))
         # carga de recursos
 
         try:
@@ -98,7 +123,41 @@ class Juego:
 
     #Cerebro de Juego
     def update(self):
-        
+        current_time = pygame.time.get_ticks()
+        #logic de intro
+        if self.showing_intro:
+            # 1. Aparecer (Fade In)
+            if self.intro_stage == "fade_in":
+                # Calculamos el progreso (0.0 a 1.0)
+                progress = (current_time - self.intro_timer) / self.DURATION_FADE_IN
+                if progress >= 1:
+                    self.intro_alpha = 255
+                    self.intro_stage = "hold"
+                    self.intro_timer = current_time # Reiniciamos timer para el hold
+                else:
+                    self.intro_alpha = int(progress * 255)
+
+            # 2. Mantener (Hold)
+            elif self.intro_stage == "hold":
+                self.intro_alpha = 255
+                if current_time - self.intro_timer > self.DURATION_HOLD:
+                    self.intro_stage = "fade_out"
+                    self.intro_timer = current_time # Reiniciamos timer para el fade out
+
+            # 3. Desaparecer (Fade Out)
+            elif self.intro_stage == "fade_out":
+                progress = (current_time - self.intro_timer) / self.DURATION_FADE_OUT
+                if progress >= 1:
+                    self.intro_alpha = 0
+                    self.showing_intro = False # TERMINA LA INTRO, EMPIEZA EL JUEGO
+                else:
+                    self.intro_alpha = 255 - int(progress * 255)
+            
+            self.camera.update()
+            return # Salimos del update aquí para no ejecutar la lógica de juego
+
+
+
         if self.game_over:
             return
 
@@ -158,6 +217,13 @@ class Juego:
         pygame.draw.rect(self.screen, (255, 255, 255), (x, y, width, height), 2)
 
 
+    def draw_text_with_alpha(self, surface, text_img, rect, alpha):
+        """Función auxiliar para dibujar texto transparente"""
+        # Creamos una copia de la imagen del texto para ponerle alpha
+        temp_surface = text_img.copy()
+        temp_surface.set_alpha(alpha)
+        surface.blit(temp_surface, rect)
+
     #Dibujos de hitbox u otro
     def draw(self):
 
@@ -207,6 +273,28 @@ class Juego:
 
         if not self.pancho.is_dead:
              self.draw_health_bar(self.pancho, screenancho // 2 - 250, 650, 500, 25, (255, 0, 0))
+
+        if self.showing_intro:
+            
+            dark_overlay = pygame.Surface((self.screen.get_width(), self.screen.get_height()))
+            dark_overlay.fill((0, 0, 0))
+            dark_overlay.set_alpha(100) # Oscuridad parcial
+            self.screen.blit(dark_overlay, (0, 0))
+
+            # Dibujar Título y Subtítulo
+            self.draw_text_with_alpha(self.screen, self.text_name, self.rect_name, self.intro_alpha)
+            self.draw_text_with_alpha(self.screen, self.text_sub, self.rect_sub, self.intro_alpha)
+            
+            
+            if self.intro_alpha > 0:
+                line_width = 400
+                center_x = self.screen.get_width() // 2
+                line_y = self.rect_name.bottom - 10
+                # Línea que se desvanece con el texto
+                s = pygame.Surface((line_width, 2))
+                s.fill((255, 255, 255))
+                s.set_alpha(self.intro_alpha)
+                self.screen.blit(s, (center_x - line_width//2, line_y))
 
         if self.game_over:
             # Capa oscura
