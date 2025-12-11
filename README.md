@@ -1,5 +1,5 @@
 #  [Into the ayss]
-![Captura del Juego](recursos/screenshot.png)
+![Captura del Juego](recursos/imagenes/screenshot.png)
 > Un juego de acción y plataformas 2D estilo "Boss Rush" desarrollado en Python.
 
 ![Estado del Proyecto](https://img.shields.io/badge/Estado-En_Desarrollo-yellow)
