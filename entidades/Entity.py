@@ -25,6 +25,7 @@ class Entity(pygame.sprite.Sprite):
         self.scale = visual_config["scale"]
         self.columns = visual_config["columns"]
         self.cooldown = visual_config["cooldown"]
+        self.attack_cooldown = visual_config.get("attack_cooldown", 50)
         self.speed = visual_config["speed"]
         self.hitbox_width, self.hitbox_height= visual_config.get("hitbox_size")
 
@@ -47,7 +48,7 @@ class Entity(pygame.sprite.Sprite):
         self.start_frame_index, self.animation_duration = self.animation_data[self.state]
 
         self.current_frame_in_animation = 0 
-        
+        self.animation_finished = False
 
         initial_spritesheet_index = self.start_frame_index + self.current_frame_in_animation
         
@@ -68,7 +69,7 @@ class Entity(pygame.sprite.Sprite):
         ### Detecta ataques de PJ o panchito
         if not self.is_attacking:
             return None
-        hitbox = pygame.Rect(0, 0, 100, 110)
+        hitbox = pygame.Rect(0, 0, 140, 110)
         if self.direction == "right":
             hitbox.midleft = self.rect.midright
         else:
@@ -132,17 +133,27 @@ class Entity(pygame.sprite.Sprite):
         current_time = pygame.time.get_ticks()
         self.check_state_change() 
 
-        if current_time - self.last_update >= self.cooldown:
+        target_cooldown = self.attack_cooldown if self.is_attacking else self.cooldown
+
+        self.animation_finished = False
+        if current_time - self.last_update >= target_cooldown:
             self.last_update = current_time 
             self.current_frame_in_animation += 1
             
+            # Si llegamos al final de la animación
             if self.current_frame_in_animation >= self.animation_duration:
-                self.current_frame_in_animation = 0 
+                # ### NUEVO: Avisamos que terminó el ciclo (Vital para el Boss)
+                self.animation_finished = True 
+
+                # Si es un ataque y termina la animación...
+                if self.is_attacking:
+                    pass 
                 
+                self.current_frame_in_animation = 0 
+
             spritesheet_index = self.start_frame_index + self.current_frame_in_animation
-            
             self.image = self.get_image(spritesheet_index)
-            self.compensate() 
+            self.compensate()
     
     ##voltea la imagen
     def compensate(self):
@@ -165,6 +176,7 @@ class Entity(pygame.sprite.Sprite):
                 return
 
             self.current_frame_in_animation = 0
+            self.animation_finished = False
             self.last_update = pygame.time.get_ticks() 
             
             spritesheet_index = self.start_frame_index 
@@ -174,13 +186,13 @@ class Entity(pygame.sprite.Sprite):
             self.previous_state = self.state
     
 class Player(Entity):
-    def __init__(self, name, spritesheet, visual_config, animation_data, default_animation, floor_y):
+    def __init__(self, name, spritesheet, visual_config, animation_data, default_animation, floor_y, limit_rigth):
         super().__init__(name, spritesheet, visual_config, animation_data, default_animation)
         
 
         self.floor_y = floor_y
 
-    
+        self.limit_right = limit_rigth
         #Variables de Salto
         self.on_ground = True      
         self.jump_speed = -20      
@@ -363,3 +375,10 @@ class Player(Entity):
             self.state = 'jump' 
             
         super().update()
+
+        if self.rect.left < 30:
+            self.rect.left = 30
+
+        # 2. Límite Derecho (No pasar del ancho del escenario)
+        if self.rect.right > self.limit_right:
+            self.rect.right = self.limit_right

@@ -52,7 +52,8 @@ class Juego:
             visual_config=player_config,
             animation_data=player_definitions,
             default_animation="idle",
-            floor_y=self.ground_level
+            floor_y=self.ground_level,
+            limit_rigth=self.ancho_escenario-30
         )
         self.all_sprites.add(self.player)
 
@@ -144,8 +145,6 @@ class Juego:
         pygame.draw.rect(self.screen, color, (x, y, width * ratio, height))
         
         pygame.draw.rect(self.screen, (255, 255, 255), (x, y, width, height), 2)
-
-        
 
 
     #Dibujos de hitbox u otro

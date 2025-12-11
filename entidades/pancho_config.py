@@ -1,23 +1,25 @@
 
 
 pancho_config = {
-    "frame_width":100,
+    "frame_width":120,
     "frame_height":100,
     "scale":3.5,
     "columns":8,
     "cooldown": 110,
     "speed": 5,
     "start_x":100,
-    "start_y": 210,
-    "crop_bounds": (15, 0, 40, 15),
+    "start_y": 240,
+    "crop_bounds": (10, 0, 10, 15),
     "hp":100,
     "hitbox_size":(50,250),
     "image_offset_x": 0
 }
 
 pancho_definitions = {
-    "idle": (0,11),
-    "walk": (12,14)
+    "idle": (0,13),
+    "walk": (13,15),
+    "trowing":(28,12),
+    "attack":(40,11)
 }
 
 player_config = {
@@ -26,6 +28,7 @@ player_config = {
     "scale":4.5,
     "columns":8,
     "cooldown": 100,
+    "attack_cooldown":50,
     "speed": 15,
     "start_x":300,
     "start_y": 127*8,
