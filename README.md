@@ -1,4 +1,4 @@
-#  [Into the ayss]
+#  [Into the Ayss]
 ![Captura del Juego](recursos/imagenes/screenshot.png)
 > Un juego de acción y plataformas 2D estilo "Boss Rush" desarrollado en Python.
 
