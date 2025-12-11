@@ -75,6 +75,16 @@ Proyecto-Final/
 │
 └── recursos/           # Assets (Imágenes y Música)
 ```
+---
+
+##  Nota para futuros estudiantes
+
+Si llegaste a este repositorio buscando referencias para tu propio proyecto de **Computación y Programación** o **Física**: ¡Eres bienvenido/a!
+
+Este código fue diseñado para ser legible y modular. Siéntete libre de estudiar cómo implementamos la **Máquina de Estados** del jefe, la separación de **Hitboxes vs Sprites** o el manejo de **Escenas**. El código es libre para que aprendas de él.
+
+*"La ciencia se construye sobre hombros de gigantes."* - ¡Éxito en tu semestre!
+
 ## Autores
 Martín Gonzalez- Creador de: Hitbox, Ataques, Vida, parry, estructura modular, administrador de escenarios, botones, pantalla de Derrota y Victoria y el entorno en Github.
 
