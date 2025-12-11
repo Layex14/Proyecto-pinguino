@@ -17,6 +17,12 @@ class Juego:
         self.screen=screen
         self.next_scene=None
 
+        self.game_over = False
+        self.victoria = False
+
+        self.font_grande = pygame.font.Font(None, 74) 
+        self.font_chica = pygame.font.Font(None, 36)
+
         self.ground_level = 127*4 
         self.floor_color = (43, 25, 40)
         
@@ -77,7 +83,13 @@ class Juego:
             if event.type == pygame.KEYDOWN:
                 if event.key==pygame.K_ESCAPE:
                     self.next_scene="menu_principal"
-                    
+                if self.game_over:
+                    if event.key == pygame.K_RETURN: # Tecla Enter
+                        if self.victoria:
+                            self.next_scene = "menu_principal" # Ganaste -> Menú
+                        else:
+                            self.next_scene = "juego" # Perdiste -> Reiniciar Nivel
+                    return
 
                 self.player.player_attack(event)  # Tecla Z
                 self.player.player_jump(event)    # Tecla X
@@ -85,6 +97,10 @@ class Juego:
 
     #Cerebro de Juego
     def update(self):
+        
+        if self.game_over:
+            return
+
         keys=pygame.key.get_pressed()
 
         self.player.Running_player(keys)
@@ -96,7 +112,7 @@ class Juego:
         if self.player.is_attacking:
             attack_box = self.player.attack_hitbox()
             if attack_box and attack_box.colliderect(self.pancho.rect):
-                self.pancho.damage(5)
+                self.pancho.damage(50)
         if self.pancho.state == 'attack_1': 
             boss_hitbox = self.pancho.attack_hitbox()
             if boss_hitbox and boss_hitbox.colliderect(self.player.rect):
@@ -105,6 +121,17 @@ class Juego:
             if self.pancho.projectile.rect.colliderect(self.player.rect):
                 if self.player.damage(15):
                     self.pancho.projectile = None  
+
+        if self.pancho.hp <= 0:
+            self.game_over = True
+            self.victoria = True
+            pygame.mixer.music.stop()
+
+        if self.player.hp <= 0:
+            self.game_over = True
+            self.victoria = False
+            pygame.mixer.music.stop()
+
 
     #Barras de vida         
     def draw_health_bar(self, entity, x, y, width, height, color):
@@ -117,6 +144,8 @@ class Juego:
         pygame.draw.rect(self.screen, color, (x, y, width * ratio, height))
         
         pygame.draw.rect(self.screen, (255, 255, 255), (x, y, width, height), 2)
+
+        
 
 
     #Dibujos de hitbox u otro
@@ -140,7 +169,7 @@ class Juego:
                 ajuste_visual = -ajuste_visual
 
             image_rect.x += ajuste_visual
-            
+
             draw_pos = image_rect.move(-offset, 9)
             
             self.screen.blit(sprite.image, draw_pos)
@@ -148,12 +177,12 @@ class Juego:
             debug_rect = sprite.rect.move(-offset, 0)
             pygame.draw.rect(self.screen, (255, 0, 0), debug_rect, 2)
             
-            #Hitbox ataque
-            # if hasattr(sprite, 'is_attacking') and sprite.is_attacking:
-            #     hitbox = sprite.attack_hitbox()
-            #     if hitbox:
-            #         hitbox_moved = hitbox.move(-offset, 0)
-            #         pygame.draw.rect(self.screen, (255, 0, 0), hitbox_moved, 2)
+            # Hitbox ataque
+            if hasattr(sprite, 'is_attacking') and sprite.is_attacking:
+                hitbox = sprite.attack_hitbox()
+                if hitbox:
+                    hitbox_moved = hitbox.move(-offset, 0)
+                    pygame.draw.rect(self.screen, (255, 0, 0), hitbox_moved, 2)
 
 
         #Hitbox de personajes
@@ -170,3 +199,31 @@ class Juego:
 
         if not self.pancho.is_dead:
              self.draw_health_bar(self.pancho, screenancho // 2 - 250, 650, 500, 25, (255, 0, 0))
+
+        if self.game_over:
+            # Capa oscura
+            s = pygame.Surface((screenancho, screenalto))  
+            s.set_alpha(128)                
+            s.fill((0,0,0))           
+            self.screen.blit(s, (0,0))
+            
+            # Textos
+            if self.victoria:
+                texto = "¡VICTORIA (el 7 profe)!"
+                color = (0, 255, 0)
+                instruccion = "Presiona ENTER para volver al Menú"
+            else:
+                texto = "DERROTA"
+                color = (255, 0, 0)
+                instruccion = "Presiona ENTER para Reiniciar"
+            
+            # Variables locales temporales para renderizar
+            cartel = self.font_grande.render(texto, True, color)
+            subtitulo = self.font_chica.render(instruccion, True, (255, 255, 255))
+
+            # Centrar
+            rect_cartel = cartel.get_rect(center=(screenancho//2, screenalto//2 - 50))
+            rect_sub = subtitulo.get_rect(center=(screenancho//2, screenalto//2 + 20))
+
+            self.screen.blit(cartel, rect_cartel)
+            self.screen.blit(subtitulo, rect_sub)

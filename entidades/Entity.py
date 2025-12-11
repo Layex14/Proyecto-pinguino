@@ -68,7 +68,7 @@ class Entity(pygame.sprite.Sprite):
         ### Detecta ataques de PJ o panchito
         if not self.is_attacking:
             return None
-        hitbox = pygame.Rect(0, 0, 60, 100)
+        hitbox = pygame.Rect(0, 0, 100, 110)
         if self.direction == "right":
             hitbox.midleft = self.rect.midright
         else:
