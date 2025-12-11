@@ -3,7 +3,7 @@
 > Un juego de acción y plataformas 2D estilo "Boss Rush" desarrollado en Python.
 
 ![Estado del Proyecto](https://img.shields.io/badge/Estado-En_Desarrollo-yellow)
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![Python](https://img.shields.io/badge/Python-3.14%2B-blue)
 ![Pygame](https://img.shields.io/badge/Pygame-CE-green)
 
 ## Descripción
