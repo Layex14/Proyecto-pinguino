@@ -54,9 +54,8 @@ class Entity(pygame.sprite.Sprite):
         
         # Creacion de la primera imagen y el rect 
         self.image = self.get_image(initial_spritesheet_index)
-
-        self.rect=pygame.Rect(0, 0, self.hitbox_width, self.hitbox_height)
-
+                
+        self.rect = pygame.Rect(0, 0, self.hitbox_width, self.hitbox_height)
         self.image_offset_x = visual_config.get("image_offset_x", 0)
 
         #posicion inicial
@@ -132,6 +131,11 @@ class Entity(pygame.sprite.Sprite):
     def update(self):
         current_time = pygame.time.get_ticks()
         self.check_state_change() 
+
+        es_ataque = self.is_attacking or self.state in ['attack', 'attack_1', 'attack_2', 'trowing']
+        target_cooldown = self.attack_cooldown if es_ataque else self.cooldown
+
+        self.animation_finished = False
 
         target_cooldown = self.attack_cooldown if self.is_attacking else self.cooldown
 
