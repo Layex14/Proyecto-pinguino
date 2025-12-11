@@ -85,11 +85,11 @@ class Juego:
                 if event.key==pygame.K_ESCAPE:
                     self.next_scene="menu_principal"
                 if self.game_over:
-                    if event.key == pygame.K_RETURN: # Tecla Enter
+                    if event.key == pygame.K_RETURN: 
                         if self.victoria:
-                            self.next_scene = "menu_principal" # Ganaste -> Menú
+                            self.next_scene = "menu_principal" 
                         else:
-                            self.next_scene = "juego" # Perdiste -> Reiniciar Nivel
+                            self.next_scene = "juego" 
                     return
 
                 self.player.player_attack(event)  # Tecla Z
@@ -113,15 +113,26 @@ class Juego:
         if self.player.is_attacking:
             attack_box = self.player.attack_hitbox()
             if attack_box and attack_box.colliderect(self.pancho.rect):
-                self.pancho.damage(50)
-        if self.pancho.state == 'attack_1': 
+                self.pancho.damage(5)
+        
+        if self.pancho.state == 'attack': 
             boss_hitbox = self.pancho.attack_hitbox()
-            if boss_hitbox and boss_hitbox.colliderect(self.player.rect):
-                self.player.damage(20)
+            if boss_hitbox:
+                if boss_hitbox.colliderect(self.player.rect):
+                    if self.player.damage(20):
+
+                        # Empuja
+                        if self.pancho.rect.centerx < self.player.rect.centerx:
+                            self.player.rect.x += 200 #der
+                        else:
+                            self.player.rect.x -= 200 #isq
+
         if self.pancho.projectile and not self.pancho.projectile.landed:
             if self.pancho.projectile.rect.colliderect(self.player.rect):
-                if self.player.damage(15):
-                    self.pancho.projectile = None  
+                if self.player.damage(15): 
+                    self.pancho.projectile = None
+            
+
 
         if self.pancho.hp <= 0:
             self.game_over = True
@@ -183,13 +194,11 @@ class Juego:
                     hitbox_moved = hitbox.move(-offset, 0)
                     pygame.draw.rect(self.screen, (255, 0, 0), hitbox_moved, 2)
 
-
-        #Hitbox de personajes
-        # debug_player_rect = self.player.rect.move(-offset, 0)
-        # pygame.draw.rect(self.screen, (255, 0, 0), debug_player_rect, 2)
-        
-        # debug_pancho_rect = self.pancho.rect.move(-offset, 0)
-        # pygame.draw.rect(self.screen, (255, 0, 0), debug_pancho_rect, 2)
+            if sprite == self.pancho and sprite.state == 'attack':
+                hitbox = sprite.attack_hitbox()
+                if hitbox:
+                    hitbox_moved = hitbox.move(-offset, 0)
+                    pygame.draw.rect(self.screen, (255, 0, 0), hitbox_moved, 2)
 
         #Proyectil de pancho
         self.pancho.draw_projectile(self.screen, offset)
