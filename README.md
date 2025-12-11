@@ -58,7 +58,7 @@ python principal.pyw
 
 ## Estructura del proyecto
 
-
+```
 Proyecto-Final/
 │
 ├── principal.pyw       # Entry Point: Bucle principal y Gestor de Escenas
@@ -74,7 +74,7 @@ Proyecto-Final/
 │   └── pancho_config.py # Datos de configuración y balanceo
 │
 └── recursos/           # Assets (Imágenes y Música)
-
+```
 ## Autores
 Martín Gonzalez- Creador de: Hitbox, Ataques, Vida, parry, estructura modular, administrador de escenarios, botones, pantalla de Derrota y Victoria y el entorno en Github.
 
